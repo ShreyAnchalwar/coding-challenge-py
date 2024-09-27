@@ -15,7 +15,7 @@ def correct_words(dictionary, mistypes):
 
 @app.route('/the-clumsy-programmer', methods=['POST'])
 def correct_words_api():
-    data = request.get_json()
+    data = request.get_json()[:4]  # Limit to the first 4 objects
     results = []
     for obj in data:
         dictionary = obj["dictionary"]
