@@ -2,27 +2,29 @@ from flask import Flask
 
 app = Flask(__name__)
 
-def correct_words(dictionary, mistypes):
-    corrections = []
-    for word in mistypes:
-        for correct_word in dictionary:
-            if len(word) == len(correct_word):
-                diff_count = sum([1 for i in range(len(word)) if word[i] != correct_word[i]])
-                if diff_count == 1:
+@app.route('/the-clumsy-programmer', methods=['POST'])
+def correct_mistypes():
+    all_data = request.json
+    results = []
+
+    for data in all_data:
+        dictionary = data['dictionary']
+        mistypes = data['mistypes']
+        corrections = []
+
+        for mistyped_word in mistypes:
+            for correct_word in dictionary:
+                if is_one_letter_off(mistyped_word, correct_word):
                     corrections.append(correct_word)
                     break
-    return corrections
 
-@app.route('/the-clumsy-programmer', methods=['POST'])
-def correct_words_api():
-    data = request.get_json()[:4]  # Limit to the first 4 objects
-    results = []
-    for obj in data:
-        dictionary = obj["dictionary"]
-        mistypes = obj["mistypes"]
-        corrections = correct_words(dictionary, mistypes)
         results.append({"corrections": corrections})
+
     return jsonify(results)
+
+def is_one_letter_off(mistyped_word, correct_word):
+    differences = sum(1 for m, c in zip(mistyped_word, correct_word) if m != c)
+    return differences == 1
 
 if __name__ == '__main__':
     app.run()
