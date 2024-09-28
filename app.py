@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/the-clumsy-programmer', methods=['POST'])
 def correct_mistypes():
-    all_data = request.json
+    all_data = request.getJson()
     results = []
 
     for data in all_data:
