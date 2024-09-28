@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/the-clumsy-programmer', methods=['POST'])
 def correct_mistypes():
-    all_data = request.getJson()
+    all_data = request.get_json()
     results = []
 
     for data in all_data:
@@ -20,7 +20,7 @@ def correct_mistypes():
 
         results.append({"corrections": corrections})
 
-    return jsonify(results)
+    return jsonify(results), 200
 
 def is_one_letter_off(mistyped_word, correct_word):
     differences = sum(1 for m, c in zip(mistyped_word, correct_word) if m != c)
